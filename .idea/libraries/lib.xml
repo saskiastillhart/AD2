@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="lib">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/dom4j-1.6.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/Dijkstra_v1.2.zip!/" />
+      <root url="jar://$PROJECT_DIR$/lib/log4j-1.2.12.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/GVS_Client_Socket_v1.6.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
