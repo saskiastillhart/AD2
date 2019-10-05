@@ -1,14 +1,12 @@
 /*
  * HSR - Uebungen 'Algorithmen & Datenstrukturen 2'
- * Version: Sun Sep 22 14:00:28 CEST 2019
+ * Version: Sun Sep 22 13:31:09 CEST 2019
  */
 
-package uebung02.as.aufgabe01;
+package uebung02.ml.aufgabe01;
 
-import com.google.common.collect.LinkedHashMultimap;
-import com.google.common.collect.Multimap;
-
-import java.util.*;
+import java.util.Collection;
+import java.util.LinkedList;
 
 public class BinarySearchTree<K extends Comparable<? super K>, V> {
 
@@ -68,8 +66,8 @@ public class BinarySearchTree<K extends Comparable<? super K>, V> {
       this.leftChild = leftChild;
       this.rightChild = rightChild;
     }
-    
-    public Entry<K, V> getEntry() {
+ 
+   public Entry<K, V> getEntry() {
       return entry;
     }
 
@@ -95,26 +93,22 @@ public class BinarySearchTree<K extends Comparable<? super K>, V> {
       this.rightChild = rightChild;
     }
 
-
-
-
-
   } // End of class Node
 
+
   public Entry<K, V> insert(K key, V value) {
-    // TODO Implement here...
     Entry<K, V> newEntry = new Entry<>(key, value);
     root = insert(root, newEntry);
     return newEntry;
-    //return null;
   }
-  protected Node insert(Node node, Entry<K, V> entry){
-    if(node == null){
+ 
+  protected Node insert(Node node, Entry<K, V> entry) {
+    if (node == null)
       return newNode(entry);
-    }else if(entry.getKey().compareTo(node.getEntry().getKey())<=0){
-      node.leftChild=insert(node.getLeftChild(), entry);
-    }else{
-      node.rightChild=insert(node.getRightChild(), entry);
+    else if (entry.getKey().compareTo(node.getEntry().getKey()) <= 0) {
+      node.leftChild = insert(node.leftChild, entry);
+    } else { /* if (entry.key > node.key) */
+      node.rightChild = insert(node.rightChild, entry);
     }
     return node;
   }
@@ -131,16 +125,10 @@ public class BinarySearchTree<K extends Comparable<? super K>, V> {
   }
 
   public void clear() {
-
-    // TODO Implement here...??
     root = null;
-
-
   }
 
   public Entry<K, V> find(K key) {
-    // TODO Implement here...
-    //return find(root, key);
     Node result = find(root, key);
     if (result == null) {
       return null;
@@ -149,18 +137,18 @@ public class BinarySearchTree<K extends Comparable<? super K>, V> {
     }
   }
 
-  protected Node find (Node node, K key){
-    if(node == null){
+  protected Node find(Node node, K key) {
+    if (node == null) {
       return null;
     }
-    if(key.compareTo(node.getEntry().getKey()) < 0){
+    if (key.compareTo(node.getEntry().getKey()) < 0) {
       return find(node.leftChild, key);
     }
-    if(key.compareTo(node.getEntry().getKey())> 0){
+    if (key.compareTo(node.getEntry().getKey()) > 0) {
       return find(node.rightChild, key);
     }
     return node;
-  }
+  };
 
   /**
    * Returns a collection with all entries with key.
@@ -171,23 +159,23 @@ public class BinarySearchTree<K extends Comparable<? super K>, V> {
    *         no entry with key is found.
    */
   public Collection<Entry<K, V>> findAll(K key) {
-    // TODO Implement here...
-    ArrayList<Entry<K, V>> allKeys = new ArrayList<>();
-    findAll(root, key, allKeys);
-    return allKeys;
+    Collection<Entry<K, V>> entries = new LinkedList<Entry<K, V>>();
+    findAll(root, key, entries);
+    return entries;
   }
-  protected void findAll(Node node, K key, Collection<Entry<K, V>> allKeys){
-    if(node == null){
+ 
+  protected void findAll(Node node, K key, Collection<Entry<K, V>> entries) {
+    if (node == null) {
       return;
     }
-    if(key.compareTo(node.getEntry().getKey()) ==0){
-      allKeys.add(node.getEntry());
+    if (key.compareTo(node.getEntry().getKey()) == 0) {
+      entries.add(node.getEntry());
     }
-    if(key.compareTo(node.getEntry().getKey())<= 0){
-      findAll(node.leftChild, key, allKeys);
+    if (key.compareTo(node.getEntry().getKey()) <= 0) {
+      findAll(node.leftChild, key, entries);
     }
-    if(key.compareTo(node.getEntry().getKey()) >= 0){
-      findAll(node.rightChild, key, allKeys);
+    if (key.compareTo(node.getEntry().getKey()) >= 0) {
+      findAll(node.rightChild, key, entries);
     }
   }
   
@@ -197,26 +185,27 @@ public class BinarySearchTree<K extends Comparable<? super K>, V> {
    * @return Inorder-Collection of all entries.
    */
   public Collection<Entry<K, V>> inorder() {
-    // TODO Implement here...
-    ArrayList<Entry<K,V>> inorderList = new ArrayList<>();
-    inorder(root, inorderList);
-    return inorderList;
+    Collection<Entry<K, V>> coll = new LinkedList<>();
+    inorder(root, coll);
+    return coll; 
   }
-  protected void inorder(Node node, Collection<Entry<K, V>> inorderList){
-    if(node==null){
+  
+  protected void inorder(Node node, Collection<Entry<K, V>> coll) {
+    if (node == null)
       return;
-    }
-    inorder(node.leftChild, inorderList);
-    inorderList.add(node.getEntry());
-    inorder(node.rightChild, inorderList);
+    inorder(node.leftChild, coll);
+    coll.add(node.getEntry());
+    inorder(node.rightChild, coll);
   }
   
   /**
    * Prints the entries of the tree as a list in inorder to the console.
    */
   public void printInorder() {
-    // TODO Implement here...
-    System.out.println(inorder());
+    inorder().stream().forEach(e -> {
+      System.out.print(e + " ");
+    });
+    System.out.println();
   }
 
   public Entry<K, V> remove(Entry<K, V> entry) {
@@ -227,7 +216,7 @@ public class BinarySearchTree<K extends Comparable<? super K>, V> {
     root = result.node;
     return result.entry;
   }
-
+  
   protected class RemoveResult {
 
     private Node node;
@@ -237,22 +226,22 @@ public class BinarySearchTree<K extends Comparable<? super K>, V> {
       this.node = node;
       this.entry = entry;
     }
-
+    
     RemoveResult set(Node node) {
       this.node = node;
       return this;
     }
-
+    
     public Node getNode() {
       return node;
     }
-
+    
     public Entry<K, V> getEntry() {
       return entry;
     }
 
   }
-
+ 
   protected RemoveResult remove(final Node node, final Entry<K, V> entry) {
     RemoveResult result = null;
     if (node == null) {
@@ -297,6 +286,14 @@ public class BinarySearchTree<K extends Comparable<? super K>, V> {
       return new RemoveResult(node, entryRemoved);
     }
   }
+
+  /**
+   * Search for the inorder successor.
+   * 
+   * @param p
+   *          The node for which the inorder successor shall be searched.
+   * @return The parent-node(!) of the inorder successor.
+   */
   protected Node getParentNext(Node p) {
     if (p.rightChild.leftChild != null) {
       p = p.rightChild;
@@ -306,49 +303,43 @@ public class BinarySearchTree<K extends Comparable<? super K>, V> {
     return p;
   }
 
-
   /**
    * The height of the tree.
    * 
    * @return The actual height. -1 for an empty tree.
    */
   public int getHeight() {
-    // TODO Implement here...
-
     return getHeight(root);
   }
-  public int getHeight(Node node){
-    if(node==null){
+ 
+  protected int getHeight(Node p) {
+    if (p == null)
       return -1;
-    }
-    int lheight= getHeight(node.getLeftChild())+1;
-    int rheight= getHeight(node.getRightChild())+1;
-    return rheight > lheight? rheight: lheight;
+    int rHeight = getHeight(p.rightChild);
+    int lHeight = getHeight(p.leftChild);
+    return (lHeight < rHeight ? rHeight : lHeight) + 1;
   }
 
   public int size() {
-    // TODO Implement here...
-
     return size(root);
   }
-  protected int size(Node node){
-      if(node == null){
-        return 0;
-      }
-      return 1 + size(node.getRightChild()) + size(node.getLeftChild());
 
+  protected int size(Node n) {
+    if (n == null) {
+      return 0;
+    }
+    return size(n.leftChild) + size(n.rightChild) + 1;
   }
 
   public boolean isEmpty() {
-    // TODO Implement here...
     return size() == 0;
   }
   
   public static void main(String[] args) {
     
     // Example from lecture "Löschen (IV/IV)":
-    BinarySearchTree<Integer, String> bst = new BinarySearchTree<>();
-    //BinarySearchTree<Integer, String> bst = new BinarySearchTreeADV<>("Löschen (IV/IV)", 0, 4);
+    //BinarySearchTree<Integer, String> bst = new BinarySearchTree<>();
+    BinarySearchTree<Integer, String> bst = new BinarySearchTreeADV<>("Löschen (IV/IV)", 0, 4);
     System.out.println("Inserting:");
     bst.insert(1, "Str1");
     bst.printInorder();
@@ -385,6 +376,4 @@ public class BinarySearchTree<K extends Comparable<? super K>, V> {
 
   */
 
-
 } // End of class BinarySearchTree
- 
